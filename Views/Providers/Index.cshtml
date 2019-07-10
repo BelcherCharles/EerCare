@@ -4,18 +4,20 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>All Providers</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Add New Provider</a>
 </p>
 
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
         <p>
-            Search providers: <input type="text" name="SearchString" value="@ViewData["nameFilter"]" />
+            Search by Provider Name: <input type="text" name="SearchString" value="@ViewData["nameFilter"]" /> 
+            Location: <input type="text" name="CityString" value="@ViewData["cityFilter"]" /> 
+            Specialty: <input type="text" name="SpecialtyString" value="@ViewData["specialtyFilter"]" />
             <input type="submit" value="Search" class="btn btn-info" /> |
-            <a asp-action="Index">Back To Full Index</a>
+            <a asp-action="Index">All Providers</a>
         </p>
     </div>
 </form>
@@ -23,51 +25,39 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ProviderName)
-            </th>
-            <th>
+            <th class="text-center">
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.ProviderName)</a>
+</th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.ProviderType)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Address1)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address2)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.State)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Zip)
-            </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Phone)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.MobilePhone)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Email)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Since)
             </th>
-            <th></th>
+            <th class="text-center">Actions</th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProviderName)
+            <td class="text-center">
+                <a asp-action="Details" asp-route-id="@item.ProviderId">@Html.DisplayFor(modelItem => item.ProviderName)</a>
             </td>
             @if (item.ProviderType != null)
             {
-                <td>
+                <td class="text-center">
                     @Html.DisplayFor(modelItem => item.ProviderType)
                 </td>
             }
@@ -75,40 +65,41 @@
             {
                 <td></td>
             }
-            <td>
-                @Html.DisplayFor(modelItem => item.Address1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address2)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.State)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Zip)
-            </td>
-            <td>
+
+            @if (item.Address2 != null)
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address1)<br/>
+                    @Html.DisplayFor(modelItem => item.Address2)<br/>
+                    @Html.DisplayFor(modelItem => item.City),  @Html.DisplayFor(modelItem => item.State)&nbsp;@Html.DisplayFor(modelItem => item.Zip)
+                </td>
+            }
+            else
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address1)<br/>
+                    @Html.DisplayFor(modelItem => item.City),  @Html.DisplayFor(modelItem => item.State)&nbsp;@Html.DisplayFor(modelItem => item.Zip)
+                </td>
+            }
+
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.Phone)
             </td>
-            <td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.MobilePhone)
             </td>
-            <td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Since)
-                </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Since)
+            </td>
 
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ProviderId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ProviderId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ProviderId">Archive</a>
-                </td>
-            </tr>
+            <td class="text-center">
+                <a asp-action="Edit" asp-route-id="@item.ProviderId">Edit</a> <br />
+                <a asp-action="Delete" asp-route-id="@item.ProviderId">Archive</a>
+            </td>
+        </tr>
 }
     </tbody>
 </table>

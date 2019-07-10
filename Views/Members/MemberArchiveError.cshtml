@@ -1,0 +1,17 @@
+﻿@model EerCare.Models.Member
+
+@{
+    ViewData["Title"] = "MemberArchiveError";
+}
+
+<h1>Lo Siento, Amigo!</h1>
+<br />
+<h2>This Member Can Not Be Archived (Again)</h2>
+
+
+<div>
+    @*<input type="hidden" name="memberId" value="@ViewBag.memberId" />*@
+    <a asp-action="Details" asp-route-id="@Model.Id">Back To Member Details</a> <br />
+    <a asp-controller="Members" asp-action="Index">Back To List</a>
+</div>
+

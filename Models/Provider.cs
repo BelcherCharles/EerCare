@@ -14,7 +14,7 @@ namespace EerCare.Models
         [DisplayName("Name")]
         public string ProviderName { get; set; }
         //[Required]
-        [DisplayName("Field")]
+        [DisplayName("Specialty")]
         public string ProviderType { get; set; }
         
     }

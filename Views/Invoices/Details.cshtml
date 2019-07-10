@@ -4,39 +4,82 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Invoice Details</h1>
 
 <div>
-    <h4>Invoice</h4>
+    @*<h4>Invoice</h4>*@
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProviderId)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Provider)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProviderId)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Provider.ProviderName)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MemberId)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Member)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MemberId)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Member.FullName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.InvoiceDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.InvoiceDate)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.SettledDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.SettledDate)
         </dd>
     </dl>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <p>Procedure Code</p>
+                </th>
+                <th>
+                    <p>Description</p>
+                </th>
+                <th>
+                    <p>Amount Billed</p>
+                </th>
+                <th>
+                    <p>Amount Settled</p>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var lineItem in Model.InvoiceLineItems)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => lineItem.ProcedureCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => lineItem.ProcedureDesc)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => lineItem.AmtBilled)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => lineItem.AmtSettled)
+                    </td>
+                    <td>
+                        <a asp-controller="LineItems" asp-action="Edit" asp-route-id="@lineItem.LineItemId">Edit</a> |
+                        <a asp-controller="LineItems" asp-action="Delete" asp-route-id="@lineItem.LineItemId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 <div>
+    <a asp-action="NewLineItem" asp-route-id="@Model.InvoiceId">Add Line Item</a> |
     <a asp-action="Edit" asp-route-id="@Model.InvoiceId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

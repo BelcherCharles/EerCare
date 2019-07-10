@@ -54,3 +54,30 @@ body {
   height: 60px;
   line-height: 60px; /* Vertically center the text there */
 }
+
+/* General styling
+-------------------------------------------------- */ 
+table{
+    width : 100%;
+    font-size : 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.indexSearch {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+tr:nth-child(even) {
+    background-color: #D9E6C4;
+}
+
+th {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}

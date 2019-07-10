@@ -1,0 +1,16 @@
+﻿@model EerCare.Models.Provider
+
+@{
+    ViewData["Title"] = "ProviderArchiveError";
+}
+
+<h1>Sorry, Cousin!</h1>
+<br />
+<h2>This Provider Is Already Archived</h2>
+
+
+<div>
+    <a asp-action="Details" asp-route-id="@Model.ProviderId">Back To Provider Details</a> <br />
+    <a asp-controller="Providers" asp-action="Index">Back To All Providers</a>
+</div>
+

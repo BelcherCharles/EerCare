@@ -39,6 +39,6 @@ namespace EerCare.Models
         [DisplayName("Archival Date")]
         [DataType(DataType.Date)]
         public DateTime? Archived { get; set; }
-        
+
     }
 }

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>All Invoices</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,39 +12,51 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ProviderId)
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.InvoiceId)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MemberId)
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.Provider)
             </th>
-            <th>
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.Member)
+            </th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.InvoiceDate)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.SettledDate)
             </th>
-            <th></th>
+            <th class="text-center">
+                Actions
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProviderId)
+            <td class="text-center">
+                <a asp-action="Details" asp-route-id="@item.InvoiceId">@Html.DisplayFor(modelItem => item.InvoiceId)</a>
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MemberId)
+            <td class="text-center">
+                <a asp-controller="Providers" asp-action="Details" asp-route-id="@item.ProviderId">@Html.DisplayFor(modelItem => item.Provider.ProviderName)</a>
             </td>
-            <td>
+            <td class="text-center">
+                <a asp-controller="Members" asp-action="Details" asp-route-id="@item.MemberId">@Html.DisplayFor(modelItem => item.Member.FullName)</a>
+            </td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.InvoiceDate)
             </td>
-            <td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.SettledDate)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.InvoiceId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.InvoiceId">Details</a> |
+
+            <td class="text-center">
+                @if (item.SettledDate == null)
+                {
+                    <a asp-action="NewLineItem" asp-route-id="@item.InvoiceId">Add Line Item</a> <text>|</text>
+                    <a asp-action="Edit" asp-route-id="@item.InvoiceId">Edit</a> <text>|</text>}
+                
                 <a asp-action="Delete" asp-route-id="@item.InvoiceId">Delete</a>
             </td>
         </tr>

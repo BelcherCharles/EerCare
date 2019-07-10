@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EerCare.Data;
 using EerCare.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EerCare.Controllers
 {
@@ -20,9 +21,13 @@ namespace EerCare.Controllers
         }
 
         // GET: Providers
-        public async Task<IActionResult> Index(string searchString)
+        [Authorize]
+        public async Task<IActionResult> Index(string sortOrder, string searchString, string cityString, string specialtyString)
         {
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["nameFilter"] = searchString;
+            ViewData["cityFilter"] = cityString;
+            ViewData["specialtyFilter"] = specialtyString;
 
             var providers = from p in _context.Provider
                           select p;
@@ -32,10 +37,31 @@ namespace EerCare.Controllers
                 providers = providers.Where(s => s.ProviderName.Contains(searchString));
             }
 
+            if (!String.IsNullOrEmpty(cityString))
+            {
+                providers = providers.Where(s => s.City.Contains(cityString));
+            }
+
+            if (!String.IsNullOrEmpty(specialtyString))
+            {
+                providers = providers.Where(s => s.ProviderType.Contains(specialtyString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    providers = providers.OrderByDescending(m => m.ProviderName);
+                    break;
+                default:
+                    providers = providers.OrderBy(m => m.ProviderName);
+                    break;
+            }
+
             return View(await providers.AsNoTracking().ToListAsync());
         }
 
         // GET: Providers/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -62,9 +88,10 @@ namespace EerCare.Controllers
         // POST: Providers/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProviderId,ProviderName,Address1,Address2,City,State,Zip,Phone,MobilePhone,Email,Since,Archived")] Provider provider)
+        public async Task<IActionResult> Create([Bind("ProviderId,ProviderName,ProviderType,Address1,Address2,City,State,Zip,Phone,MobilePhone,Email,Since,Archived")] Provider provider)
         {
             if (ModelState.IsValid)
             {
@@ -77,6 +104,7 @@ namespace EerCare.Controllers
         }
 
         // GET: Providers/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,6 +112,7 @@ namespace EerCare.Controllers
                 return NotFound();
             }
 
+            ViewBag.returnUrl = Request.Headers["Referer"].ToString();
             var provider = await _context.Provider.FindAsync(id);
             if (provider == null)
             {
@@ -97,7 +126,7 @@ namespace EerCare.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProviderId,ProviderName,ProviderType,Address1,Address2,City,State,Zip,Phone,MobilePhone,Email,Since,Archived")] Provider provider)
+        public async Task<IActionResult> Edit(int id, [Bind("ProviderId,ProviderName,ProviderType,Address1,Address2,City,State,Zip,Phone,MobilePhone,Email,Since,Archived")] string returnUrl, Provider provider)
         {
             if (id != provider.ProviderId)
             {
@@ -122,12 +151,13 @@ namespace EerCare.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Redirect(returnUrl);
             }
             return View(provider);
         }
 
         // GET: Providers/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -135,6 +165,7 @@ namespace EerCare.Controllers
                 return NotFound();
             }
 
+            ViewBag.returnUrl = Request.Headers["Referer"].ToString();
             var provider = await _context.Provider
                 .FirstOrDefaultAsync(m => m.ProviderId == id);
             if (provider == null)
@@ -148,12 +179,28 @@ namespace EerCare.Controllers
         // POST: Providers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string returnUrl, int id)
         {
             var provider = await _context.Provider.FindAsync(id);
-            provider.Archived = DateTime.Today;
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            if (provider.Archived == null)
+            {
+                provider.Archived = DateTime.Today;
+                await _context.SaveChangesAsync();
+                return Redirect(returnUrl);
+            }
+
+            return RedirectToAction("ProviderArchiveError", new { id });
+        }
+
+        // GET: Providers/Delete/5
+        [Authorize]
+        public async Task<IActionResult> ProviderArchiveError(int? id)
+        {
+            var provider = await _context.Provider
+                .FirstOrDefaultAsync(m => m.ProviderId == id);
+
+            return View(provider);
         }
 
         private bool ProviderExists(int id)

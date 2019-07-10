@@ -22,19 +22,28 @@ namespace EerCare.Controllers
 
         // GET: Members
         [Authorize]
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(string sortOrder, string searchString, string ssnSearchString)
         {
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["DODSortParm"] = sortOrder== "dodDate" ? "dod_date_desc" : "dodDate";
             ViewData["nameFilter"] = searchString;
+            ViewData["ssnFilter"] = ssnSearchString;
 
             var members = from m in _context.Member
                           select m;
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                members = members.Where(s => s.LastName.Contains(searchString));
+                members = members.Where(s => s.LastName.Contains(searchString));               
+                //|| s.SSN.Equals(searchString));
             }
+
+            if (!String.IsNullOrEmpty(ssnSearchString))
+            {
+                members = members.Where(s => s.SSN.Equals(ssnSearchString));
+            }
+
 
             switch (sortOrder)
             {
@@ -42,10 +51,16 @@ namespace EerCare.Controllers
                     members = members.OrderByDescending(m => m.LastName);
                     break;
                 case "Date":
-                    members = members.OrderBy(m => m.DOB);
+                    members = members.OrderBy(m => m.DOB != null).ThenBy(m => m.DOB);
                     break;
                 case "date_desc":
-                    members = members.OrderByDescending(m => m.DOB);
+                    members = members.OrderByDescending(m => m.DOB != null).ThenByDescending(m => m.DOB);
+                    break;
+                case "dodDate":
+                    members = members.OrderBy(m => m.DOD != null).ThenBy(m => m.DOD);
+                    break;
+                case "dod_date_desc":
+                    members = members.OrderByDescending(m => m.DOD != null).ThenByDescending(m => m.DOD);
                     break;
                 default:
                     members = members.OrderBy(m => m.LastName);
@@ -77,6 +92,7 @@ namespace EerCare.Controllers
         [Authorize]
         public IActionResult Create()
         {
+
             return View();
         }
 
@@ -107,6 +123,7 @@ namespace EerCare.Controllers
                 return NotFound();
             }
 
+            ViewBag.returnUrl = Request.Headers["Referer"].ToString();
             var member = await _context.Member.FindAsync(id);
             if (member == null)
             {
@@ -121,7 +138,7 @@ namespace EerCare.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,MI,LastName,SSN,DOB,DOD,Address1,Address2,City,State,Zip,Phone,MobilePhone,Email,Since,Archived")] Member member)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,MI,LastName,SSN,DOB,DOD,Address1,Address2,City,State,Zip,Phone,MobilePhone,Email,Since,Archived")] string returnUrl, Member member)
         {
             if (id != member.Id)
             {
@@ -146,7 +163,8 @@ namespace EerCare.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Redirect(returnUrl);
+                
             }
             return View(member);
         }
@@ -160,6 +178,8 @@ namespace EerCare.Controllers
                 return NotFound();
             }
 
+            
+            ViewBag.returnUrl = Request.Headers["Referer"].ToString();
             var member = await _context.Member
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (member == null)
@@ -174,12 +194,27 @@ namespace EerCare.Controllers
         [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string returnUrl, int id)
         {
             var member = await _context.Member.FindAsync(id);
-            member.Archived = DateTime.Today;
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (member.Archived == null)
+            {
+                member.Archived = DateTime.Today;
+                await _context.SaveChangesAsync();
+                return Redirect(returnUrl);
+            }
+
+            return RedirectToAction("MemberArchiveError", new { id } );
+        }
+
+        // GET: Members/Delete/5
+        [Authorize]
+        public async Task<IActionResult> MemberArchiveError(int? id)
+        {
+            var member = await _context.Member
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            return View(member);
         }
 
         private bool MemberExists(int id)

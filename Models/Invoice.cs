@@ -10,20 +10,29 @@ namespace EerCare.Models
 {
     public class Invoice
     {
+        [DisplayName("Invoice Id")]
         public int InvoiceId { get; set; }
+
         [Required]
         public int ProviderId { get; set; }
+
         public Provider Provider { get; set; }
-        public List<SelectListItem> allProviders { get; set; }
+        
         [Required]
         public int MemberId { get; set; }
+
         public Member Member { get; set; }
-        public List<SelectListItem> allMembers { get; set; }
+        
         [Required]
         [DisplayName("Invoice Date")]
         [DataType(DataType.Date)]
         public DateTime InvoiceDate { get; set; }
+
         [DataType(DataType.Date)]
-        public DateTime SettledDate { get; set; }
+        [DisplayName("Settled Date")]
+        public DateTime? SettledDate { get; set; }
+
+        [DisplayName("Line Items")]
+        public List<LineItem> InvoiceLineItems { get; set; }
     }
 }

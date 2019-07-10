@@ -1,4 +1,4 @@
-﻿@model EerCare.Models.Invoice
+﻿@model EerCare.Models.ViewModels.InvoiceViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,26 +12,25 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="InvoiceId" />
+            <input type="hidden" asp-for="Invoice.InvoiceId" />
+            <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
             <div class="form-group">
-                <label asp-for="ProviderId" class="control-label"></label>
-                <input asp-for="ProviderId" class="form-control" />
-                <span asp-validation-for="ProviderId" class="text-danger"></span>
+                <label asp-for="Invoice.ProviderId" class="control-label">Provider Name</label>
+                <select asp-for="Invoice.ProviderId" class="form-control" asp-items="@Model.allProviders"></select>
             </div>
             <div class="form-group">
-                <label asp-for="MemberId" class="control-label"></label>
-                <input asp-for="MemberId" class="form-control" />
-                <span asp-validation-for="MemberId" class="text-danger"></span>
+                <label asp-for="Invoice.MemberId" class="control-label">Member Name</label>
+                <select asp-for="Invoice.MemberId" class="form-control" asp-items="@Model.allMembers"></select>
             </div>
             <div class="form-group">
-                <label asp-for="InvoiceDate" class="control-label"></label>
-                <input asp-for="InvoiceDate" class="form-control" />
-                <span asp-validation-for="InvoiceDate" class="text-danger"></span>
+                <label asp-for="Invoice.InvoiceDate" class="control-label"></label>
+                <input asp-for="Invoice.InvoiceDate" class="form-control" />
+                <span asp-validation-for="Invoice.InvoiceDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SettledDate" class="control-label"></label>
-                <input asp-for="SettledDate" class="form-control" />
-                <span asp-validation-for="SettledDate" class="text-danger"></span>
+                <label asp-for="Invoice.SettledDate" class="control-label"></label>
+                <input asp-for="Invoice.SettledDate" class="form-control" />
+                <span asp-validation-for="Invoice.SettledDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

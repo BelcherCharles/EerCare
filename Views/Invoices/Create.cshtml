@@ -4,20 +4,19 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Enter A New Invoice</h1>
 
-<h4>Invoice</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Invoice.ProviderId" class="control-label"></label>
+                <label asp-for="Invoice.ProviderId" class="control-label">Provider Name</label>
                 <select asp-for="Invoice.ProviderId" class="form-control" asp-items="@Model.allProviders"></select>
             </div>
-            <<div class="form-group">
-                <label asp-for="Invoice.MemberId" class="control-label"></label>
+            <div class="form-group">
+                <label asp-for="Invoice.MemberId" class="control-label">Member Name</label>
                 <select asp-for="Invoice.MemberId" class="form-control" asp-items="@Model.allMembers"></select>
             </div>
             <div class="form-group">
@@ -25,11 +24,7 @@
                 <input asp-for="Invoice.InvoiceDate" class="form-control" />
                 <span asp-validation-for="Invoice.InvoiceDate" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label asp-for="Invoice.SettledDate" class="control-label"></label>
-                <input asp-for="Invoice.SettledDate" class="form-control" />
-                <span asp-validation-for="Invoice.SettledDate" class="text-danger"></span>
-            </div>*@
+            
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

@@ -39,10 +39,13 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Members" asp-action="Index">Member Index</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Members" asp-action="Index">Members</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Providers" asp-action="Index">Provider Index</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Providers" asp-action="Index">Providers</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Invoices" asp-action="Index">Invoices</a>
                             </li>
                             @*<li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Invoices" asp-action="Create">Enter New Invoice</a>
@@ -54,11 +57,11 @@
                 {
                     <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                         <partial name="_LoginPartial" />
-                        <ul class="navbar-nav flex-grow-1">
+                        @*<ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li>
-                        </ul>
+                        </ul>*@
                     </div>
                 }
                 </div>

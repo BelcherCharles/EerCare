@@ -4,11 +4,8 @@
     ViewData["Title"] = "Delete";
 }
 
-<h1>Archive</h1>
-
 <h3>Are you sure you want to archive this provider?</h3>
 <div>
-    <@*h4>Provider</h4>*@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -81,7 +78,8 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="ProviderId" />
+        <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
         <input type="submit" value="Archive" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index">All Providers</a>
     </form>
 </div>
